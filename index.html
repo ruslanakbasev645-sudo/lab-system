@@ -3,904 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Лабораторная система</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        h1, h2, h3 { color: #2c3e50; text-align: center; margin-bottom: 15px; }
-        .logo { text-align: center; margin-bottom: 20px; }
-        .logo .icon { font-size: 64px; }
-        .btn { padding: 10px 18px; border: none; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; margin: 5px; transition: transform 0.2s; display: inline-block; }
-        .btn:active { transform: scale(0.98); }
+        .container { max-width: 500px; margin: 0 auto; }
+        .card { background: white; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-success { background: #2ecc71; color: white; }
         .btn-danger { background: #e74c3c; color: white; }
-        .btn-warning { background: #f39c12; color: white; }
-        .btn-info { background: #3498db; color: white; }
-        .btn-sm { padding: 5px 12px; font-size: 12px; }
         .field { margin-bottom: 15px; }
         .field label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; }
-        .field input, .field select, .field textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; font-family: inherit; }
+        .field input, .field select, .field textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
         .hidden { display: none; }
         .error { color: #e74c3c; text-align: center; margin-top: 10px; }
         .success { color: #2ecc71; text-align: center; margin-top: 10px; }
-        .employee-card, .staff-card { background: #f8f9fa; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #3498db; cursor: pointer; transition: 0.2s; }
-        .employee-card:hover, .staff-card:hover { background: #e3f2fd; transform: translateX(5px); }
-        .employee-name { font-weight: bold; font-size: 18px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
-        .avatar-sm { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .flex-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .task-card { background: #fff8e1; border-radius: 10px; padding: 12px; margin-top: 10px; }
-        .task-title { font-weight: bold; }
-        .task-answer { background: #d5f4e6; padding: 10px; border-radius: 8px; margin-top: 10px; }
-        .status { display: inline-block; padding: 3px 10px; border-radius: 15px; font-size: 12px; }
-        .status-pending { background: #f39c12; color: white; }
-        .status-completed { background: #2ecc71; color: white; }
-        .petri-card { background: #e8f8f5; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #2ecc71; }
-        .file-card { background: #e3f2fd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid #2196f3; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; cursor: pointer; transition: 0.2s; }
-        .file-card:hover { background: #bbdef5; }
-        .file-info { flex: 1; }
-        .file-name { font-weight: bold; }
-        .file-meta { font-size: 11px; color: #666; margin-top: 3px; }
-        .folder-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; }
-        .files-container { max-height: 500px; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .user-info { background: rgba(0,0,0,0.1); padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .button-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
-        .file-explorer { background: #f5f5f5; border-radius: 15px; padding: 15px; margin-top: 15px; }
-        .file-icon { font-size: 24px; margin-right: 10px; }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo .icon { font-size: 64px; }
+        .employee-card { background: #f8f9fa; border-radius: 15px; padding: 12px; margin-bottom: 12px; }
+        task-card { background: #fff8e1; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
+        .petri-card { background: #e8f8f5; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .mb-2 { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- СТРАНИЦА ВХОДА/РЕГИСТРАЦИИ -->
-        <div id="pageLogin" class="page active">
-            <div class="logo">
-                <div class="icon">⚕️</div>
-                <h1>Лабораторная система</h1>
-                <p>Медицинская информационная система</p>
-            </div>
-            
-            <div id="mainMenu" class="card">
-                <button class="btn btn-primary" onclick="showLoginForm()">🔐 Вход</button>
-                <button class="btn btn-success" onclick="showRegisterForm()">📝 Регистрация</button>
-            </div>
-            
-            <div id="loginForm" class="card hidden">
-                <h2>🔐 Вход</h2>
-                <div class="field"><label>Пароль лаборатории:</label><input type="password" id="loginLabPass" placeholder="Пароль лаборатории"></div>
-                <div class="field"><label>ФИО:</label><input type="text" id="loginName" placeholder="Иванов Иван Иванович"></div>
-                <div class="field"><label>Пароль:</label><input type="password" id="loginPass"></div>
-                <button class="btn btn-primary" onclick="doLogin()">Войти</button>
-                <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
-                <div id="loginError" class="error"></div>
-            </div>
-            
-            <div id="registerForm" class="card hidden">
-                <h2>📝 Регистрация</h2>
-                <div class="field"><label>Должность:</label><select id="regRole" onchange="toggleRegFields()"><option value="employee">Работник</option><option value="admin">Руководитель</option></select></div>
-                <div id="regAdminField"><div class="field"><label>Пароль лаборатории:</label><input type="text" id="regLabPass" placeholder="Придумайте пароль лаборатории"></div></div>
-                <div id="regEmployeeField" class="hidden"><div class="field"><label>Пароль лаборатории:</label><input type="password" id="regLabPassEmployee" placeholder="Введите пароль лаборатории"></div></div>
-                <div class="field"><label>ФИО:</label><input type="text" id="regName" placeholder="Иванов Иван Иванович"></div>
-                <div class="field"><label>Пароль:</label><input type="password" id="regPass"></div>
-                <div class="field"><label>Аватарка (необязательно):</label><input type="file" id="regAvatar" accept="image/*"></div>
-                <button class="btn btn-success" onclick="doRegister()">Зарегистрироваться</button>
-                <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
-                <div id="regError" class="error"></div>
-                <div id="regSuccess" class="success"></div>
-            </div>
-        </div>
-        
-        <!-- СТРАНИЦА РУКОВОДИТЕЛЯ -->
-        <div id="pageAdmin" class="page">
-            <div class="header">
-                <h1>👨‍⚕️ Панель руководителя</h1>
-                <div class="button-group">
-                    <button class="btn btn-warning" onclick="showFileExplorer()">📁 Открыть файловый менеджер</button>
-                    <button class="btn btn-info" onclick="exportAllData()">📤 Экспорт всех данных</button>
-                    <button class="btn btn-info" onclick="importData()">📥 Импорт данных</button>
-                    <input type="file" id="importFileAdmin" accept=".json" style="display:none" onchange="doImportAdmin()">
-                    <button class="btn btn-danger" onclick="logout()">🚪 Выйти</button>
-                </div>
-            </div>
-            <div class="user-info" id="adminUserInfo"></div>
-            
-            <div class="card">
-                <h3>➕ Добавить сотрудника</h3>
-                <div class="flex-row">
-                    <div style="flex:1"><input type="text" id="newEmpName" placeholder="ФИО сотрудника" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;"></div>
-                    <button class="btn btn-success" onclick="addEmployee()">Добавить</button>
-                </div>
-                <div id="addMsg" class="success" style="margin-top:10px;"></div>
-            </div>
-            
-            <div class="card">
-                <h3>📋 Список сотрудников</h3>
-                <div id="employeesList"></div>
-            </div>
-            
-            <!-- Файловый менеджер (встроенный в приложение) -->
-            <div id="fileExplorerPanel" class="card" style="display:none;">
-                <div class="folder-header">
-                    <h3>📁 Файловая система лаборатории: <span id="folderName"></span></h3>
-                    <button class="btn btn-sm" onclick="closeFileExplorer()">✖️ Закрыть</button>
-                </div>
-                <div id="fileExplorerContent" class="files-container"></div>
-            </div>
-        </div>
-        
-        <!-- СТРАНИЦА РАБОТНИКА -->
-        <div id="pageEmployee" class="page">
-            <div class="header">
-                <h1>👩‍🔬 Панель работника</h1>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="saveToFolder()">📁 Сохранить в лабораторию</button>
-                    <button class="btn btn-info" onclick="exportMyData()">📤 Экспорт моих данных</button>
-                    <button class="btn btn-danger" onclick="logout()">🚪 Выйти</button>
-                </div>
-            </div>
-            <div class="user-info" id="employeeUserInfo"></div>
-            
-            <div class="grid-2">
-                <!-- Левая колонка: сотрудники -->
-                <div class="card">
-                    <h3>👥 Сотрудники лаборатории</h3>
-                    <div id="staffList"></div>
-                </div>
-                
-                <!-- Правая колонка: чашки Петри и поручения -->
-                <div>
-                    <div class="card">
-                        <h3>🧫 Чашки Петри</h3>
-                        <div class="field"><textarea id="petriContent" rows="3" placeholder="Введите описание чашки Петри... ✍️ Можно писать стилусом"></textarea></div>
-                        <button class="btn btn-success" onclick="savePetri()">💾 Сохранить в базу</button>
-                        <div id="petriList" style="margin-top:15px;"></div>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>📋 Поручения от руководителя</h3>
-                        <div id="tasksList"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Модальное окно для просмотра файлов сотрудника -->
-            <div id="staffFilesModal" class="card hidden">
-                <div class="folder-header">
-                    <h3>📁 Файлы сотрудника: <span id="staffNameModal"></span></h3>
-                    <button class="btn btn-sm" onclick="closeStaffFiles()">✖️ Закрыть</button>
-                </div>
-                <div id="staffFilesContainer" class="files-container"></div>
-            </div>
-        </div>
+<div class="container">
+    <div class="logo"><div class="icon">⚕️</div><h1>Лабораторная система</h1><p>Медицинская информационная система</p></div>
+
+    <div id="authMenu" class="card">
+        <button class="btn btn-primary" onclick="showLogin()">🔐 Вход</button>
+        <button class="btn btn-success" onclick="showRegister()">📝 Регистрация</button>
     </div>
 
-    <script>
-        // ========== SUPABASE КЛЮЧИ ==========
-        const supabaseUrl = 'https://labsystem-8b93c.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhYnN5c3RlbS04YjkzYyIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzQ2MjU5MjUwLCJleHAiOjIwNjE4MzUyNTB9.V0uZvYePdWwtVlWQokHtmBPvQ_dnkgBkZqOAXK-n4QI';
-        
-        // ========== БАЗА ДАННЫХ (localStorage) — ВСЁ ХРАНИТСЯ В ПРИЛОЖЕНИИ ==========
-        class Database {
-            init() {
-                if (!localStorage.getItem('lab_config')) localStorage.setItem('lab_config', JSON.stringify({}));
-                if (!localStorage.getItem('lab_users')) localStorage.setItem('lab_users', JSON.stringify([]));
-                if (!localStorage.getItem('lab_employees')) localStorage.setItem('lab_employees', JSON.stringify([]));
-                if (!localStorage.getItem('lab_tasks')) localStorage.setItem('lab_tasks', JSON.stringify([]));
-                if (!localStorage.getItem('lab_petri')) localStorage.setItem('lab_petri', JSON.stringify([]));
-                if (!localStorage.getItem('lab_files')) localStorage.setItem('lab_files', JSON.stringify({}));
-            }
-            getConfig() { return JSON.parse(localStorage.getItem('lab_config')); }
-            saveConfig(c) { localStorage.setItem('lab_config', JSON.stringify(c)); }
-            getUsers() { return JSON.parse(localStorage.getItem('lab_users')); }
-            saveUsers(u) { localStorage.setItem('lab_users', JSON.stringify(u)); }
-            getEmployees() { return JSON.parse(localStorage.getItem('lab_employees')); }
-            saveEmployees(e) { localStorage.setItem('lab_employees', JSON.stringify(e)); }
-            getTasks() { return JSON.parse(localStorage.getItem('lab_tasks')); }
-            saveTasks(t) { localStorage.setItem('lab_tasks', JSON.stringify(t)); }
-            getPetri() { return JSON.parse(localStorage.getItem('lab_petri')); }
-            savePetri(p) { localStorage.setItem('lab_petri', JSON.stringify(p)); }
-            getFiles() { return JSON.parse(localStorage.getItem('lab_files')); }
-            saveFiles(f) { localStorage.setItem('lab_files', JSON.stringify(f)); }
-            
-            createLab(labPassword, adminName, adminPassword, avatarBase64) {
-                let config = this.getConfig();
-                if (config[labPassword]) return { error: 'Лаборатория уже создана' };
-                config[labPassword] = { createdBy: adminName, createdAt: new Date().toISOString(), users: [], files: [] };
-                this.saveConfig(config);
-                let users = this.getUsers();
-                users.push({ id: Date.now(), fullname: adminName, password: adminPassword, role: 'admin', labPassword: labPassword, avatar: avatarBase64 });
-                this.saveUsers(users);
-                let allFiles = this.getFiles();
-                if (!allFiles[labPassword]) allFiles[labPassword] = [];
-                this.saveFiles(allFiles);
-                return { success: true };
-            }
-            
-            registerEmployee(labPassword, fullname, password, avatarBase64) {
-                let config = this.getConfig();
-                if (!config[labPassword]) return { error: 'Лаборатория не найдена' };
-                let users = this.getUsers();
-                if (users.find(u => u.fullname === fullname)) return { error: 'Пользователь уже существует' };
-                let employeeId = Date.now();
-                users.push({ id: employeeId, fullname: fullname, password: password, role: 'employee', labPassword: labPassword, avatar: avatarBase64 });
-                this.saveUsers(users);
-                if (!config[labPassword].users) config[labPassword].users = [];
-                config[labPassword].users.push({ id: employeeId, fullname: fullname });
-                this.saveConfig(config);
-                let employees = this.getEmployees();
-                employees.push({ id: employeeId, fullname: fullname, labPassword: labPassword });
-                this.saveEmployees(employees);
-                return { success: true };
-            }
-            
-            login(labPassword, fullname, password) {
-                let config = this.getConfig();
-                if (!config[labPassword]) return { error: 'Лаборатория не найдена' };
-                let users = this.getUsers();
-                let user = users.find(u => u.fullname === fullname && u.password === password && u.labPassword === labPassword);
-                if (!user) return { error: 'Неверное ФИО или пароль' };
-                return { success: true, user: user, labPassword: labPassword };
-            }
-            
-            addEmployeeByAdmin(labPassword, fullname) {
-                let employees = this.getEmployees();
-                if (employees.find(e => e.fullname === fullname && e.labPassword === labPassword)) return { error: 'Сотрудник уже добавлен' };
-                employees.push({ id: Date.now(), fullname: fullname, labPassword: labPassword });
-                this.saveEmployees(employees);
-                return { success: true };
-            }
-            
-            deleteEmployee(id, labPassword) {
-                let employees = this.getEmployees();
-                this.saveEmployees(employees.filter(e => e.id != id));
-                let tasks = this.getTasks();
-                this.saveTasks(tasks.filter(t => t.employeeId != id));
-            }
-            
-            addTask(employeeId, title, fromUser, labPassword) {
-                let tasks = this.getTasks();
-                tasks.push({ id: Date.now(), employeeId, title, fromUser, labPassword, status: 'pending', answer: null, createdAt: new Date().toISOString() });
-                this.saveTasks(tasks);
-            }
-            
-            getTasksForEmployee(employeeId) {
-                return this.getTasks().filter(t => t.employeeId == employeeId);
-            }
-            
-            answerTask(taskId, answer) {
-                let tasks = this.getTasks();
-                let task = tasks.find(t => t.id == taskId);
-                if (task) { task.answer = answer; task.status = 'completed'; task.answeredAt = new Date().toISOString(); this.saveTasks(tasks); return true; }
-                return false;
-            }
-            
-            savePetriDish(employeeId, content, labPassword) {
-                let petri = this.getPetri();
-                petri.push({ id: Date.now(), employeeId, content, labPassword, createdAt: new Date().toISOString() });
-                this.savePetri(petri);
-                return true;
-            }
-            
-            getPetriForEmployee(employeeId) {
-                return this.getPetri().filter(p => p.employeeId == employeeId);
-            }
-            
-            getEmployeeIdByFullname(fullname, labPassword) {
-                let employees = this.getEmployees();
-                let emp = employees.find(e => e.fullname === fullname && e.labPassword === labPassword);
-                return emp ? emp.id : null;
-            }
-            
-            getAllEmployeesForLab(labPassword) {
-                return this.getEmployees().filter(e => e.labPassword === labPassword);
-            }
-            
-            getAllUsersForLab(labPassword) {
-                return this.getUsers().filter(u => u.labPassword === labPassword);
-            }
-            
-            saveFileToLab(labPassword, fileName, content, employeeName, employeeId) {
-                let allFiles = this.getFiles();
-                if (!allFiles[labPassword]) allFiles[labPassword] = [];
-                allFiles[labPassword].push({
-                    id: Date.now(),
-                    name: fileName,
-                    content: content,
-                    employeeName: employeeName,
-                    employeeId: employeeId,
-                    date: new Date().toISOString(),
-                    size: content.length
-                });
-                this.saveFiles(allFiles);
-                return { success: true };
-            }
-            
-            getLabFiles(labPassword) {
-                let allFiles = this.getFiles();
-                return allFiles[labPassword] || [];
-            }
-            
-            getEmployeeFiles(labPassword, employeeId) {
-                let allFiles = this.getFiles();
-                let labFiles = allFiles[labPassword] || [];
-                return labFiles.filter(f => f.employeeId == employeeId);
-            }
-            
-            deleteLabFile(labPassword, fileId) {
-                let allFiles = this.getFiles();
-                if (allFiles[labPassword]) {
-                    allFiles[labPassword] = allFiles[labPassword].filter(f => f.id != fileId);
-                    this.saveFiles(allFiles);
-                }
-            }
-            
-            clearAll() { localStorage.clear(); this.init(); }
+    <div id="loginForm" class="card hidden">
+        <h2>🔐 Вход</h2>
+        <div class="field"><label>Пароль лаборатории:</label><input type="password" id="loginLab"></div>
+        <div class="field"><label>ФИО:</label><input type="text" id="loginName"></div>
+        <div class="field"><label>Пароль:</label><input type="password" id="loginPass"></div>
+        <button class="btn btn-primary" onclick="doLogin()">Войти</button>
+        <button class="btn" onclick="showMainMenu()">Назад</button>
+        <div id="loginError" class="error"></div>
+    </div>
+
+    <div id="registerForm" class="card hidden">
+        <h2>📝 Регистрация</h2>
+        <div class="field"><label>Должность:</label><select id="regRole"><option value="employee">Работник</option><option value="admin">Руководитель</option></select></div>
+        <div id="adminFields"><div class="field"><label>Пароль лаборатории (создать):</label><input type="text" id="regLabPass"></div></div>
+        <div id="empFields" class="hidden"><div class="field"><label>Пароль лаборатории (от руководителя):</label><input type="password" id="regLabPassEmp"></div></div>
+        <div class="field"><label>ФИО:</label><input type="text" id="regName"></div>
+        <div class="field"><label>Пароль:</label><input type="password" id="regPass"></div>
+        <button class="btn btn-success" onclick="doRegister()">Зарегистрироваться</button>
+        <button class="btn" onclick="showMainMenu()">Назад</button>
+        <div id="regError" class="error"></div>
+        <div id="regSuccess" class="success"></div>
+    </div>
+
+    <div id="adminPanel" class="card hidden">
+        <div class="flex-between"><h2>👨‍⚕️ Панель руководителя</h2><button class="btn btn-danger" onclick="logout()" style="width:auto">Выйти</button></div>
+        <div id="adminUserInfo" class="mb-2"></div>
+        <div class="field"><label>➕ Добавить сотрудника</label><input type="text" id="newEmpName"></div>
+        <button class="btn btn-success" onclick="addEmployee()">Добавить</button>
+        <div id="addMsg" class="success"></div>
+        <h3>📋 Сотрудники</h3>
+        <div id="employeesList"></div>
+    </div>
+
+    <div id="employeePanel" class="card hidden">
+        <div class="flex-between"><h2>👩‍🔬 Панель работника</h2><button class="btn btn-danger" onclick="logout()" style="width:auto">Выйти</button></div>
+        <div id="employeeUserInfo" class="mb-2"></div>
+        <div class="field"><textarea id="petriContent" rows="3" placeholder="Опишите чашку Петри... ✍️ Можно стилусом"></textarea></div>
+        <button class="btn btn-success" onclick="savePetri()">💾 Сохранить чашку Петри</button>
+        <div id="petriList" style="margin-top:15px;"></div>
+        <h3>📋 Поручения от руководителя</h3>
+        <div id="tasksList"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const supabaseUrl = 'https://labsystem-8b93c.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhYnN5c3RlbS04YjkzYyIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzQ2MjU5MjUwLCJleHAiOjIwNjE4MzUyNTB9.V0uZvYePdWwtVlWQokHtmBPvQ_dnkgBkZqOAXK-n4QI';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    let currentUser = null;
+
+    function showMainMenu() {
+        document.getElementById('authMenu').classList.remove('hidden');
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+        document.getElementById('adminPanel').classList.add('hidden');
+        document.getElementById('employeePanel').classList.add('hidden');
+    }
+
+    function showLogin() {
+        document.getElementById('authMenu').classList.add('hidden');
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('loginError').innerHTML = '';
+    }
+
+    function showRegister() {
+        document.getElementById('authMenu').classList.add('hidden');
+        document.getElementById('registerForm').classList.remove('hidden');
+        document.getElementById('regError').innerHTML = '';
+        document.getElementById('regSuccess').innerHTML = '';
+        let role = document.getElementById('regRole').value;
+        document.getElementById('adminFields').classList.toggle('hidden', role !== 'admin');
+        document.getElementById('empFields').classList.toggle('hidden', role !== 'employee');
+    }
+
+    document.getElementById('regRole').onchange = function() {
+        let role = this.value;
+        document.getElementById('adminFields').classList.toggle('hidden', role !== 'admin');
+        document.getElementById('empFields').classList.toggle('hidden', role !== 'employee');
+    };
+
+    async function doRegister() {
+        let role = document.getElementById('regRole').value;
+        let name = document.getElementById('regName').value.trim();
+        let pass = document.getElementById('regPass').value;
+        if (!name || !pass) { document.getElementById('regError').innerHTML = 'Заполните поля'; return; }
+        if (pass.length < 3) { document.getElementById('regError').innerHTML = 'Пароль минимум 3 символа'; return; }
+
+        if (role === 'admin') {
+            let labPass = document.getElementById('regLabPass').value.trim();
+            if (!labPass) { document.getElementById('regError').innerHTML = 'Придумайте пароль лаборатории'; return; }
+            let { data: lab } = await supabase.from('labs').select().eq('lab_password', labPass);
+            if (lab?.length) { document.getElementById('regError').innerHTML = 'Лаборатория уже есть'; return; }
+            await supabase.from('labs').insert([{ lab_password: labPass, created_by: name }]);
+            let userId = crypto.randomUUID();
+            await supabase.from('users').insert([{ id: userId, fullname: name, password: pass, role: 'admin', lab_password: labPass }]);
+            document.getElementById('regSuccess').innerHTML = '✅ Лаборатория создана! Войдите.';
+            setTimeout(showMainMenu, 2000);
+        } else {
+            let labPass = document.getElementById('regLabPassEmp').value;
+            if (!labPass) { document.getElementById('regError').innerHTML = 'Введите пароль лаборатории'; return; }
+            let { data: lab } = await supabase.from('labs').select().eq('lab_password', labPass);
+            if (!lab?.length) { document.getElementById('regError').innerHTML = 'Лаборатория не найдена'; return; }
+            let { data: user } = await supabase.from('users').select().eq('fullname', name);
+            if (user?.length) { document.getElementById('regError').innerHTML = 'Пользователь уже есть'; return; }
+            let userId = crypto.randomUUID();
+            await supabase.from('users').insert([{ id: userId, fullname: name, password: pass, role: 'employee', lab_password: labPass }]);
+            document.getElementById('regSuccess').innerHTML = '✅ Регистрация успешна! Войдите.';
+            setTimeout(showMainMenu, 2000);
         }
-        
-        const db = new Database();
-        db.init();
-        
-        // ========== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ==========
-        function showPage(pageName) {
-            document.getElementById('pageLogin').classList.remove('active');
-            document.getElementById('pageAdmin').classList.remove('active');
-            document.getElementById('pageEmployee').classList.remove('active');
-            document.getElementById('page' + pageName).classList.add('active');
-        }
-        
-        // ========== UI ФУНКЦИИ (ЛОГИН/РЕГИСТРАЦИЯ) ==========
-        function showMainMenu() {
-            document.getElementById('mainMenu').classList.remove('hidden');
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-        }
-        
-        function showLoginForm() {
-            document.getElementById('mainMenu').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('loginError').innerHTML = '';
-        }
-        
-        function showRegisterForm() {
-            document.getElementById('mainMenu').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
-            toggleRegFields();
-            document.getElementById('regError').innerHTML = '';
-            document.getElementById('regSuccess').innerHTML = '';
-        }
-        
-        function toggleRegFields() {
-            let role = document.getElementById('regRole').value;
-            if (role === 'admin') {
-                document.getElementById('regAdminField').classList.remove('hidden');
-                document.getElementById('regEmployeeField').classList.add('hidden');
-            } else {
-                document.getElementById('regAdminField').classList.add('hidden');
-                document.getElementById('regEmployeeField').classList.remove('hidden');
-            }
-        }
-        
-        async function doRegister() {
-            let role = document.getElementById('regRole').value;
-            let name = document.getElementById('regName').value.trim();
-            let pass = document.getElementById('regPass').value;
-            let avatarFile = document.getElementById('regAvatar').files[0];
-            let avatarBase64 = null;
-            
-            if (avatarFile) {
-                avatarBase64 = await new Promise((resolve) => {
-                    let reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.readAsDataURL(avatarFile);
-                });
-            }
-            
-            if (!name || !pass) { showRegError('Заполните все поля'); return; }
-            if (pass.length < 3) { showRegError('Пароль минимум 3 символа'); return; }
-            
-            if (role === 'admin') {
-                let labPass = document.getElementById('regLabPass').value.trim();
-                if (!labPass) { showRegError('Создайте пароль лаборатории'); return; }
-                if (labPass.length < 3) { showRegError('Пароль лаборатории минимум 3 символа'); return; }
-                
-                let result = db.createLab(labPass, name, pass, avatarBase64);
-                if (result.error) {
-                    showRegError(result.error);
-                } else {
-                    document.getElementById('regSuccess').innerHTML = '✅ Лаборатория создана! Теперь войдите.';
-                    setTimeout(showMainMenu, 2000);
-                }
-            } else {
-                let labPass = document.getElementById('regLabPassEmployee').value;
-                if (!labPass) { showRegError('Введите пароль лаборатории'); return; }
-                
-                let result = db.registerEmployee(labPass, name, pass, avatarBase64);
-                if (result.error) {
-                    showRegError(result.error);
-                } else {
-                    document.getElementById('regSuccess').innerHTML = '✅ Регистрация успешна! Теперь войдите.';
-                    setTimeout(showMainMenu, 2000);
-                }
-            }
-        }
-        
-        function showRegError(msg) {
-            document.getElementById('regError').innerHTML = msg;
-            document.getElementById('regSuccess').innerHTML = '';
-        }
-        
-        async function doLogin() {
-            let labPass = document.getElementById('loginLabPass').value;
-            let name = document.getElementById('loginName').value.trim();
-            let pass = document.getElementById('loginPass').value;
-            
-            let result = db.login(labPass, name, pass);
-            if (result.error) {
-                document.getElementById('loginError').innerHTML = result.error;
-            } else {
-                localStorage.setItem('lab_auto_session', JSON.stringify({ user: result.user, labPassword: labPass }));
-                localStorage.setItem('lab_login_session', JSON.stringify({ user: result.user, labPassword: labPass }));
-                localStorage.setItem('currentLabPassword', labPass);
-                
-                if (result.user.role === 'admin') {
-                    let avatarHtml = result.user.avatar ? `<img src="${result.user.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${result.user.fullname.charAt(0)}</div>`;
-                    document.getElementById('adminUserInfo').innerHTML = `${avatarHtml} <span>👨‍⚕️ ${result.user.fullname} | 🔑 Лаборатория: ${labPass}</span>`;
-                    document.getElementById('folderName').innerHTML = labPass;
-                    showPage('Admin');
-                    loadEmployees();
-                } else {
-                    let avatarHtml = result.user.avatar ? `<img src="${result.user.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${result.user.fullname.charAt(0)}</div>`;
-                    document.getElementById('employeeUserInfo').innerHTML = `${avatarHtml} <span>👩‍🔬 ${result.user.fullname} | 🔑 Лаборатория: ${labPass}</span>`;
-                    showPage('Employee');
-                    loadStaffList();
-                    loadEmployeeData(result.user.id);
-                }
-            }
-        }
-        
-        // ========== ПАНЕЛЬ РУКОВОДИТЕЛЯ ==========
-        function loadEmployees() {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let employees = db.getAllEmployeesForLab(labPassword);
-            let container = document.getElementById('employeesList');
-            container.innerHTML = '';
-            
-            if (employees.length === 0) {
-                container.innerHTML = '<p>Нет сотрудников</p>';
-                return;
-            }
-            
-            for (let emp of employees) {
-                let tasks = db.getTasksForEmployee(emp.id);
-                let div = document.createElement('div');
-                div.className = 'employee-card';
-                div.innerHTML = `
-                    <div class="employee-name">
-                        <div class="flex-row" style="gap:10px;">
-                            ${getAvatarHtml(emp.id, emp.fullname)}
-                            <span>${emp.fullname}</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary btn-sm" onclick="showTaskModal(${emp.id}, '${emp.fullname}')">📝 Дать поручение</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteEmployee(${emp.id})">🗑️ Удалить</button>
-                        </div>
-                    </div>
-                    <div>📋 Поручений: ${tasks.length}</div>
-                    <div id="tasksFor_${emp.id}" style="margin-top:10px;"></div>
-                `;
-                container.appendChild(div);
-                
-                let tasksDiv = document.getElementById(`tasksFor_${emp.id}`);
-                if (tasks.length > 0) {
-                    tasksDiv.innerHTML = '<strong>Поручения:</strong>';
-                    for (let task of tasks) {
-                        tasksDiv.innerHTML += `<div class="task-card"><strong>📌 ${task.title}</strong><div>От: ${task.fromUser}</div><div><span class="status ${task.status === 'pending' ? 'status-pending' : 'status-completed'}">${task.status === 'pending' ? 'В работе' : 'Выполнено'}</span></div>${task.answer ? `<div class="task-answer"><strong>Ответ:</strong> ${task.answer}</div>` : ''}</div>`;
-                    }
-                }
-            }
-        }
-        
-        function getAvatarHtml(userId, fullname) {
-            let users = db.getUsers();
-            let user = users.find(u => u.id == userId);
-            if (user && user.avatar) {
-                return `<img src="${user.avatar}" class="avatar-sm" onclick="event.stopPropagation()">`;
-            }
-            return `<div class="avatar-sm" style="background:#9b59b6;">${fullname.charAt(0)}</div>`;
-        }
-        
-        function addEmployee() {
-            let name = document.getElementById('newEmpName').value.trim();
-            if (!name) return;
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let result = db.addEmployeeByAdmin(labPassword, name);
-            let msgDiv = document.getElementById('addMsg');
-            if (result.error) {
-                msgDiv.style.color = 'red';
-                msgDiv.innerHTML = result.error;
-            } else {
-                msgDiv.style.color = 'green';
-                msgDiv.innerHTML = '✅ Сотрудник добавлен';
-                document.getElementById('newEmpName').value = '';
-                loadEmployees();
-            }
-            setTimeout(() => msgDiv.innerHTML = '', 2000);
-        }
-        
-        function deleteEmployee(id) {
-            if (confirm('Удалить сотрудника?')) {
-                let labPassword = localStorage.getItem('currentLabPassword');
-                db.deleteEmployee(id, labPassword);
-                loadEmployees();
-            }
-        }
-        
-        function showTaskModal(employeeId, employeeName) {
-            let modal = document.createElement('div');
-            modal.style.position = 'fixed'; modal.style.top = 0; modal.style.left = 0; modal.style.width = '100%'; modal.style.height = '100%';
-            modal.style.background = 'rgba(0,0,0,0.5)'; modal.style.display = 'flex'; modal.style.justifyContent = 'center'; modal.style.alignItems = 'center'; modal.style.zIndex = 2000;
-            modal.innerHTML = `<div style="background:white; border-radius:20px; padding:25px; width:90%; max-width:400px;"><h3>📝 Дать поручение</h3><p>Сотрудник: <strong>${employeeName}</strong></p><textarea id="taskTitle" rows="3" style="width:100%; padding:12px; margin:15px 0; border:1px solid #ddd; border-radius:10px;"></textarea><div style="display:flex; gap:10px; margin-top:10px;"><button onclick="sendTask(${employeeId})" class="btn btn-success">Отправить</button><button onclick="closeModal()" class="btn">Отмена</button></div></div>`;
-            document.body.appendChild(modal);
-        }
-        
-        function closeModal() { let m = document.querySelector('div[style*="position: fixed;"][style*="z-index: 2000"]'); if (m) m.remove(); }
-        
-        function sendTask(employeeId) {
-            let title = document.getElementById('taskTitle').value.trim();
-            if (!title) { alert('Введите поручение'); return; }
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let currentUser = JSON.parse(localStorage.getItem('lab_login_session')).user;
-            db.addTask(employeeId, title, currentUser.fullname, labPassword);
-            closeModal();
+    }
+
+    async function doLogin() {
+        let lab = document.getElementById('loginLab').value;
+        let name = document.getElementById('loginName').value.trim();
+        let pass = document.getElementById('loginPass').value;
+        let { data: users } = await supabase.from('users').select().eq('lab_password', lab).eq('fullname', name).eq('password', pass);
+        if (!users?.length) { document.getElementById('loginError').innerHTML = 'Неверные данные'; return; }
+        currentUser = users[0];
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        if (currentUser.role === 'admin') {
+            document.getElementById('adminUserInfo').innerHTML = `👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentUser.lab_password}`;
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('authMenu').classList.add('hidden');
             loadEmployees();
-            alert('Поручение отправлено!');
+        } else {
+            document.getElementById('employeeUserInfo').innerHTML = `👩‍🔬 ${currentUser.fullname} | 🔑 ${currentUser.lab_password}`;
+            document.getElementById('employeePanel').classList.remove('hidden');
+            document.getElementById('authMenu').classList.add('hidden');
+            loadEmployeePetri();
+            loadEmployeeTasks();
         }
-        
-        // ========== ФАЙЛОВЫЙ МЕНЕДЖЕР (ВНУТРИ ПРИЛОЖЕНИЯ) ==========
-        function showFileExplorer() {
-            let panel = document.getElementById('fileExplorerPanel');
-            panel.style.display = 'block';
-            loadFileExplorer();
-        }
-        
-        function closeFileExplorer() {
-            document.getElementById('fileExplorerPanel').style.display = 'none';
-        }
-        
-        function loadFileExplorer() {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let files = db.getLabFiles(labPassword);
-            let container = document.getElementById('fileExplorerContent');
-            container.innerHTML = '';
-            
-            // Сортируем по дате (новые сверху)
-            files.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            if (files.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px; color:#95a5a6;"><span class="file-icon">📁</span><br>Папка пуста<br><small>Нажмите "Сохранить в лабораторию" в панели работника</small></div>';
-                return;
+    }
+
+    async function loadEmployees() {
+        let { data: users } = await supabase.from('users').select().eq('lab_password', currentUser.lab_password).eq('role', 'employee');
+        let container = document.getElementById('employeesList');
+        container.innerHTML = '';
+        if (!users?.length) { container.innerHTML = '<p>Нет сотрудников</p>'; return; }
+        for (let user of users) {
+            let { data: petri } = await supabase.from('petri').select().eq('employee_id', user.id);
+            let div = document.createElement('div');
+            div.className = 'employee-card';
+            div.innerHTML = `<div class="flex-between"><strong>${user.fullname}</strong><button class="btn btn-primary" style="width:auto; padding:5px 12px;" onclick="showTaskModal('${user.id}')">📝 Дать поручение</button></div>`;
+            if (petri?.length) {
+                div.innerHTML += `<div><strong>Чашки Петри:</strong>`;
+                for (let p of petri) div.innerHTML += `<div class="petri-card">📄 ${p.content}<br><small>${new Date(p.created_at).toLocaleString()}</small></div>`;
+                div.innerHTML += `</div>`;
             }
-            
-            for (let file of files) {
-                let div = document.createElement('div');
-                div.className = 'file-card';
-                div.innerHTML = `
-                    <div class="file-info" onclick="viewFileContent('${file.id}')">
-                        <div class="file-name">📄 ${file.name}</div>
-                        <div class="file-meta">👤 ${file.employeeName} | 📅 ${new Date(file.date).toLocaleString()} | 📏 ${file.size} симв.</div>
-                    </div>
-                    <div onclick="event.stopPropagation()">
-                        <button class="btn btn-warning btn-sm" onclick="downloadFileFromExplorer('${file.id}')">⬇️ Скачать</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteFileFromExplorer('${file.id}')">🗑️ Удалить</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
+            container.appendChild(div);
         }
-        
-        function viewFileContent(fileId) {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let files = db.getLabFiles(labPassword);
-            let file = files.find(f => f.id == fileId);
-            if (file) {
-                alert(`📄 ${file.name}\n\n👤 ${file.employeeName}\n📅 ${new Date(file.date).toLocaleString()}\n\n${'═'.repeat(60)}\n\n${file.content}`);
-            }
+    }
+
+    async function addEmployee() {
+        let name = document.getElementById('newEmpName').value.trim();
+        if (!name) return;
+        let userId = crypto.randomUUID();
+        await supabase.from('users').insert([{ id: userId, fullname: name, password: '', role: 'employee', lab_password: currentUser.lab_password }]);
+        document.getElementById('newEmpName').value = '';
+        document.getElementById('addMsg').innerHTML = '✅ Добавлен';
+        setTimeout(() => document.getElementById('addMsg').innerHTML = '', 1500);
+        loadEmployees();
+    }
+
+    function showTaskModal(empId) {
+        let modal = document.createElement('div');
+        modal.style.position = 'fixed'; modal.style.top = 0; modal.style.left = 0; modal.style.width = '100%'; modal.style.height = '100%';
+        modal.style.background = 'rgba(0,0,0,0.5)'; modal.style.display = 'flex'; modal.style.justifyContent = 'center'; modal.style.alignItems = 'center'; modal.style.zIndex = 1000;
+        modal.innerHTML = `<div style="background:white; border-radius:20px; padding:20px; width:90%; max-width:350px;"><h3>📝 Поручение</h3><textarea id="taskTitle" rows="3" style="width:100%; padding:10px;"></textarea><div style="display:flex; gap:10px; margin-top:10px;"><button onclick="sendTask('${empId}')" class="btn btn-success">Отправить</button><button onclick="closeModal()" class="btn">Отмена</button></div></div>`;
+        document.body.appendChild(modal);
+    }
+    function closeModal() { let m = document.querySelector('div[style*="z-index: 1000"]'); if (m) m.remove(); }
+    async function sendTask(empId) {
+        let title = document.getElementById('taskTitle').value.trim();
+        if (!title) return;
+        await supabase.from('tasks').insert([{ id: crypto.randomUUID(), employee_id: empId, title: title, from_user: currentUser.fullname, status: 'pending', created_at: new Date().toISOString() }]);
+        closeModal();
+        alert('Поручение отправлено');
+    }
+
+    async function loadEmployeePetri() {
+        let { data: petri } = await supabase.from('petri').select().eq('employee_id', currentUser.id);
+        let container = document.getElementById('petriList');
+        container.innerHTML = '';
+        if (!petri?.length) { container.innerHTML = '<p>Нет чашек Петри</p>'; return; }
+        for (let p of petri) container.innerHTML += `<div class="petri-card">📄 ${p.content}<br><small>${new Date(p.created_at).toLocaleString()}</small></div>`;
+    }
+
+    async function savePetri() {
+        let content = document.getElementById('petriContent').value.trim();
+        if (!content) return;
+        await supabase.from('petri').insert([{ id: crypto.randomUUID(), employee_id: currentUser.id, content: content, created_at: new Date().toISOString() }]);
+        document.getElementById('petriContent').value = '';
+        loadEmployeePetri();
+        alert('Сохранено');
+    }
+
+    async function loadEmployeeTasks() {
+        let { data: tasks } = await supabase.from('tasks').select().eq('employee_id', currentUser.id);
+        let container = document.getElementById('tasksList');
+        container.innerHTML = '';
+        if (!tasks?.length) { container.innerHTML = '<p>Нет поручений</p>'; return; }
+        for (let task of tasks) {
+            let answerHtml = task.answer ? `<div><strong>Ответ:</strong> ${task.answer}</div>` :
+                `<textarea id="ans_${task.id}" rows="2" style="width:100%; margin-top:8px; padding:8px;"></textarea>
+                 <button class="btn btn-primary" style="margin-top:5px; width:auto; padding:5px 12px;" onclick="sendAnswer('${task.id}')">📤 Ответить</button>`;
+            container.innerHTML += `<div class="card" style="margin-bottom:10px;"><strong>${task.title}</strong><div>От: ${task.from_user}</div><div>${new Date(task.created_at).toLocaleString()}</div>${answerHtml}</div>`;
         }
-        
-        function downloadFileFromExplorer(fileId) {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let files = db.getLabFiles(labPassword);
-            let file = files.find(f => f.id == fileId);
-            if (file) {
-                const blob = new Blob([file.content], {type: 'text/plain'});
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = file.name;
-                link.click();
-                URL.revokeObjectURL(link.href);
-                alert(`✅ Файл "${file.name}" скачан`);
-            }
+    }
+
+    async function sendAnswer(taskId) {
+        let answer = document.getElementById(`ans_${taskId}`).value.trim();
+        if (!answer) return;
+        await supabase.from('tasks').update({ answer: answer, status: 'completed', answered_at: new Date().toISOString() }).eq('id', taskId);
+        loadEmployeeTasks();
+        alert('Ответ отправлен');
+    }
+
+    function logout() { localStorage.removeItem('currentUser'); currentUser = null; showMainMenu(); }
+
+    let saved = localStorage.getItem('currentUser');
+    if (saved) {
+        currentUser = JSON.parse(saved);
+        if (currentUser.role === 'admin') {
+            document.getElementById('adminUserInfo').innerHTML = `👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentUser.lab_password}`;
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('authMenu').classList.add('hidden');
+            loadEmployees();
+        } else {
+            document.getElementById('employeeUserInfo').innerHTML = `👩‍🔬 ${currentUser.fullname} | 🔑 ${currentUser.lab_password}`;
+            document.getElementById('employeePanel').classList.remove('hidden');
+            document.getElementById('authMenu').classList.add('hidden');
+            loadEmployeePetri();
+            loadEmployeeTasks();
         }
-        
-        function deleteFileFromExplorer(fileId) {
-            if (confirm('Удалить этот файл навсегда?')) {
-                let labPassword = localStorage.getItem('currentLabPassword');
-                db.deleteLabFile(labPassword, fileId);
-                loadFileExplorer();
-                alert('Файл удалён');
-            }
-        }
-        
-        // ========== ПАНЕЛЬ РАБОТНИКА ==========
-        function loadStaffList() {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let users = db.getAllUsersForLab(labPassword);
-            let container = document.getElementById('staffList');
-            container.innerHTML = '';
-            
-            if (users.length === 0) {
-                container.innerHTML = '<p>Нет сотрудников</p>';
-                return;
-            }
-            
-            for (let user of users) {
-                let div = document.createElement('div');
-                div.className = 'staff-card';
-                div.onclick = () => showEmployeeFiles(user.id, user.fullname);
-                div.innerHTML = `
-                    <div class="flex-row" style="justify-content:space-between;">
-                        <div class="flex-row" style="gap:10px;">
-                            ${getAvatarHtml(user.id, user.fullname)}
-                            <span><strong>${user.fullname}</strong> (${user.role === 'admin' ? 'Руководитель' : 'Работник'})</span>
-                        </div>
-                        <span>👁️ Нажмите для просмотра файлов</span>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
-        }
-        
-        function showEmployeeFiles(employeeId, employeeName) {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let files = db.getEmployeeFiles(labPassword, employeeId);
-            let container = document.getElementById('staffFilesContainer');
-            let modal = document.getElementById('staffFilesModal');
-            
-            document.getElementById('staffNameModal').innerHTML = employeeName;
-            container.innerHTML = '';
-            
-            if (files.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px; color:#95a5a6;"><span class="file-icon">📁</span><br>У сотрудника пока нет файлов</div>';
-            } else {
-                for (let file of files) {
-                    let div = document.createElement('div');
-                    div.className = 'file-card';
-                    div.onclick = () => viewEmployeeFile(file.id);
-                    div.innerHTML = `
-                        <div class="file-info">
-                            <div class="file-name">📄 ${file.name}</div>
-                            <div class="file-meta">📅 ${new Date(file.date).toLocaleString()}</div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                }
-            }
-            
-            modal.classList.remove('hidden');
-        }
-        
-        function viewEmployeeFile(fileId) {
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let files = db.getLabFiles(labPassword);
-            let file = files.find(f => f.id == fileId);
-            if (file) {
-                alert(`📄 ${file.name}\n\n📅 ${new Date(file.date).toLocaleString()}\n\n${'═'.repeat(60)}\n\n${file.content}`);
-            }
-        }
-        
-        function closeStaffFiles() {
-            document.getElementById('staffFilesModal').classList.add('hidden');
-        }
-        
-        function loadEmployeeData(employeeId) {
-            loadPetri(employeeId);
-            loadTasks(employeeId);
-        }
-        
-        function loadPetri(employeeId) {
-            let petri = db.getPetriForEmployee(employeeId);
-            let container = document.getElementById('petriList');
-            if (petri.length === 0) {
-                container.innerHTML = '<p>Нет данных</p>';
-                return;
-            }
-            container.innerHTML = '';
-            for (let p of petri) {
-                container.innerHTML += `<div class="petri-card">📝 ${p.content}<br><small>${new Date(p.createdAt).toLocaleString()}</small></div>`;
-            }
-        }
-        
-        function loadTasks(employeeId) {
-            let tasks = db.getTasksForEmployee(employeeId);
-            let container = document.getElementById('tasksList');
-            if (tasks.length === 0) {
-                container.innerHTML = '<p>Нет поручений</p>';
-                return;
-            }
-            container.innerHTML = '';
-            for (let task of tasks) {
-                let answerHtml = task.answer ? `<div class="task-answer"><strong>✅ Ваш ответ:</strong> ${task.answer}</div>` : 
-                    `<textarea id="answer_${task.id}" rows="2" style="width:100%; margin:10px 0; padding:10px; border:1px solid #ddd; border-radius:10px;"></textarea>
-                     <button class="btn btn-primary btn-sm" onclick="sendAnswer(${task.id})">📤 Ответить</button>`;
-                container.innerHTML += `<div class="task-card"><div class="task-title">📌 ${task.title}</div><div>От: ${task.fromUser}</div><div>📅 ${new Date(task.createdAt).toLocaleString()}</div><div><span class="status ${task.status === 'pending' ? 'status-pending' : 'status-completed'}">${task.status === 'pending' ? 'В работе' : 'Выполнено'}</span></div>${answerHtml}</div>`;
-            }
-        }
-        
-        function savePetri() {
-            let content = document.getElementById('petriContent').value.trim();
-            if (!content) { alert('Введите описание'); return; }
-            let currentUser = JSON.parse(localStorage.getItem('lab_login_session')).user;
-            let labPassword = localStorage.getItem('currentLabPassword');
-            db.savePetriDish(currentUser.id, content, labPassword);
-            document.getElementById('petriContent').value = '';
-            loadPetri(currentUser.id);
-            alert('Сохранено в базу');
-        }
-        
-        async function saveToFolder() {
-            let content = document.getElementById('petriContent').value.trim();
-            if (!content) { alert('Введите описание'); return; }
-            
-            let currentUser = JSON.parse(localStorage.getItem('lab_login_session')).user;
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let employeeId = currentUser.id;
-            let fileName = `Чашка_Петри_${currentUser.fullname.replace(/ /g, '_')}_${Date.now()}.txt`;
-            let fileContent = `Лаборатория: ${labPassword}\nСотрудник: ${currentUser.fullname}\nДата: ${new Date().toLocaleString()}\n${'═'.repeat(60)}\nОПИСАНИЕ:\n${content}\n${'═'.repeat(60)}`;
-            
-            db.saveFileToLab(labPassword, fileName, fileContent, currentUser.fullname, employeeId);
-            alert('✅ Файл сохранён в лабораторию!');
-            document.getElementById('petriContent').value = '';
-            // Если открыт файловый менеджер, обновляем его
-            if (document.getElementById('fileExplorerPanel').style.display === 'block') {
-                loadFileExplorer();
-            }
-        }
-        
-        function sendAnswer(taskId) {
-            let answer = document.getElementById(`answer_${taskId}`).value.trim();
-            if (!answer) { alert('Введите ответ'); return; }
-            let currentUser = JSON.parse(localStorage.getItem('lab_login_session')).user;
-            db.answerTask(taskId, answer);
-            loadTasks(currentUser.id);
-            alert('Ответ отправлен');
-        }
-        
-        function exportMyData() {
-            let currentUser = JSON.parse(localStorage.getItem('lab_login_session')).user;
-            let labPassword = localStorage.getItem('currentLabPassword');
-            let myFiles = db.getEmployeeFiles(labPassword, currentUser.id);
-            let exportData = {
-                user: currentUser,
-                petri: db.getPetriForEmployee(currentUser.id),
-                tasks: db.getTasksForEmployee(currentUser.id),
-                files: myFiles
-            };
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `my_data_${currentUser.fullname}_${Date.now()}.json`;
-            link.click();
-            URL.revokeObjectURL(link.href);
-            alert('Экспорт создан');
-        }
-        
-        function exportAllData() {
-            let allData = {
-                users: db.getUsers(),
-                employees: db.getEmployees(),
-                tasks: db.getTasks(),
-                petri: db.getPetri(),
-                files: db.getFiles(),
-                config: db.getConfig()
-            };
-            const blob = new Blob([JSON.stringify(allData, null, 2)], {type: 'application/json'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `lab_full_backup_${Date.now()}.json`;
-            link.click();
-            URL.revokeObjectURL(link.href);
-            alert('Бэкап создан');
-        }
-        
-        function importData() {
-            let input = document.getElementById('importFileAdmin');
-            input.onchange = function(e) {
-                let file = e.target.files[0];
-                if (!file) return;
-                let reader = new FileReader();
-                reader.onload = function(ev) {
-                    try {
-                        let data = JSON.parse(ev.target.result);
-                        if (data.users) localStorage.setItem('lab_users', JSON.stringify(data.users));
-                        if (data.employees) localStorage.setItem('lab_employees', JSON.stringify(data.employees));
-                        if (data.tasks) localStorage.setItem('lab_tasks', JSON.stringify(data.tasks));
-                        if (data.petri) localStorage.setItem('lab_petri', JSON.stringify(data.petri));
-                        if (data.files) localStorage.setItem('lab_files', JSON.stringify(data.files));
-                        if (data.config) localStorage.setItem('lab_config', JSON.stringify(data.config));
-                        alert('Данные импортированы! Перезагрузите страницу.');
-                        location.reload();
-                    } catch(e) { alert('Ошибка при импорте'); }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-        
-        function doImportAdmin(e) { }
-        
-        function logout() {
-            localStorage.removeItem('lab_auto_session');
-            localStorage.removeItem('lab_login_session');
-            localStorage.removeItem('currentLabPassword');
-            showPage('Login');
-            showMainMenu();
-        }
-        
-        // ========== АВТО-ВХОД ==========
-        let savedSession = localStorage.getItem('lab_auto_session');
-        if (savedSession) {
-            let session = JSON.parse(savedSession);
-            let result = db.login(session.labPassword, session.user.fullname, session.user.password);
-            if (result.success) {
-                localStorage.setItem('lab_login_session', JSON.stringify({ user: result.user, labPassword: session.labPassword }));
-                localStorage.setItem('currentLabPassword', session.labPassword);
-                if (result.user.role === 'admin') {
-                    let avatarHtml = result.user.avatar ? `<img src="${result.user.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${result.user.fullname.charAt(0)}</div>`;
-                    document.getElementById('adminUserInfo').innerHTML = `${avatarHtml} <span>👨‍⚕️ ${result.user.fullname} | 🔑 Лаборатория: ${session.labPassword}</span>`;
-                    document.getElementById('folderName').innerHTML = session.labPassword;
-                    showPage('Admin');
-                    loadEmployees();
-                } else {
-                    let avatarHtml = result.user.avatar ? `<img src="${result.user.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${result.user.fullname.charAt(0)}</div>`;
-                    document.getElementById('employeeUserInfo').innerHTML = `${avatarHtml} <span>👩‍🔬 ${result.user.fullname} | 🔑 Лаборатория: ${session.labPassword}</span>`;
-                    showPage('Employee');
-                    loadStaffList();
-                    loadEmployeeData(result.user.id);
-                }
-            }
-        }
-        
-        window.showMainMenu = showMainMenu;
-        window.showLoginForm = showLoginForm;
-        window.showRegisterForm = showRegisterForm;
-        window.doLogin = doLogin;
-        window.doRegister = doRegister;
-        window.addEmployee = addEmployee;
-        window.deleteEmployee = deleteEmployee;
-        window.showTaskModal = showTaskModal;
-        window.sendTask = sendTask;
-        window.savePetri = savePetri;
-        window.saveToFolder = saveToFolder;
-        window.sendAnswer = sendAnswer;
-        window.logout = logout;
-        window.showFileExplorer = showFileExplorer;
-        window.closeFileExplorer = closeFileExplorer;
-        window.viewFileContent = viewFileContent;
-        window.downloadFileFromExplorer = downloadFileFromExplorer;
-        window.deleteFileFromExplorer = deleteFileFromExplorer;
-        window.closeStaffFiles = closeStaffFiles;
-        window.exportAllData = exportAllData;
-        window.exportMyData = exportMyData;
-        window.importData = importData;
-        window.toggleRegFields = toggleRegFields;
-    </script>
+    }
+
+    window.showMainMenu = showMainMenu;
+    window.showLogin = showLogin;
+    window.showRegister = showRegister;
+    window.doLogin = doLogin;
+    window.doRegister = doRegister;
+    window.addEmployee = addEmployee;
+    window.showTaskModal = showTaskModal;
+    window.sendTask = sendTask;
+    window.savePetri = savePetri;
+    window.sendAnswer = sendAnswer;
+    window.logout = logout;
+</script>
 </body>
 </html>
