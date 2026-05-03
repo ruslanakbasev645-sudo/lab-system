@@ -1,200 +1,93 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Лабораторная система</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        h1, h2, h3 { color: #2c3e50; text-align: center; margin-bottom: 15px; }
-        .logo { text-align: center; margin-bottom: 20px; }
-        .logo .icon { font-size: 64px; }
-        .btn { padding: 10px 18px; border: none; border-radius: 25px; font-size: 14px; font-weight: bold; cursor: pointer; margin: 5px; transition: transform 0.2s; display: inline-block; }
-        .btn:active { transform: scale(0.98); }
+        .container { max-width: 500px; margin: 0 auto; }
+        .card { background: white; border-radius: 25px; padding: 35px; margin-bottom: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 12px; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-success { background: #2ecc71; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-warning { background: #f39c12; color: white; }
-        .btn-info { background: #3498db; color: white; }
-        .btn-sm { padding: 5px 12px; font-size: 12px; }
-        .field { margin-bottom: 15px; }
-        .field label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; }
-        .field input, .field select, .field textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; font-family: inherit; }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .field input, .field select, .field textarea { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; }
         .hidden { display: none; }
-        .error { color: #e74c3c; text-align: center; margin-top: 10px; }
-        .success { color: #2ecc71; text-align: center; margin-top: 10px; }
-        .employee-card, .staff-card { background: #f8f9fa; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 4px solid #3498db; cursor: pointer; transition: 0.2s; }
-        .employee-card:hover, .staff-card:hover { background: #e3f2fd; transform: translateX(5px); }
-        .employee-name { font-weight: bold; font-size: 18px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; }
-        .avatar-sm { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .flex-row { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .task-card { background: #fff8e1; border-radius: 10px; padding: 12px; margin-top: 10px; }
-        .task-title { font-weight: bold; }
-        .task-answer { background: #d5f4e6; padding: 10px; border-radius: 8px; margin-top: 10px; }
-        .status { display: inline-block; padding: 3px 10px; border-radius: 15px; font-size: 12px; }
-        .status-pending { background: #f39c12; color: white; }
-        .status-completed { background: #2ecc71; color: white; }
-        .petri-card { background: #e8f8f5; padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #2ecc71; }
-        .file-card { background: #e3f2fd; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid #2196f3; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; cursor: pointer; transition: 0.2s; }
-        .file-card:hover { background: #bbdef5; }
-        .file-info { flex: 1; }
-        .file-name { font-weight: bold; }
-        .file-meta { font-size: 11px; color: #666; margin-top: 3px; }
-        .folder-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; justify-content: space-between; }
-        .files-container { max-height: 500px; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .user-info { background: rgba(0,0,0,0.1); padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .button-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
-        .file-explorer { background: #f5f5f5; border-radius: 15px; padding: 15px; margin-top: 15px; }
-        .file-icon { font-size: 24px; margin-right: 10px; }
+        .error { color: #e74c3c; text-align: center; margin-top: 15px; }
+        .success { color: #2ecc71; text-align: center; margin-top: 15px; }
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo .icon { font-size: 80px; background: rgba(255,255,255,0.2); width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .logo h1 { color: white; font-size: 32px; }
+        .logo p { color: rgba(255,255,255,0.8); font-size: 16px; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <!-- СТРАНИЦА ВХОДА/РЕГИСТРАЦИИ -->
-        <div id="pageLogin" class="page active">
-            <div class="logo">
-                <div class="icon">⚕️</div>
-                <h1>Лабораторная система</h1>
-                <p>Медицинская информационная система</p>
-            </div>
-            
-            <div id="mainMenu" class="card">
-                <button class="btn btn-primary" onclick="showLoginForm()">🔐 Вход</button>
-                <button class="btn btn-success" onclick="showRegisterForm()">📝 Регистрация</button>
-            </div>
-            
-            <div id="loginForm" class="card hidden">
-                <h2>🔐 Вход</h2>
-                <div class="field"><label>Пароль лаборатории:</label><input type="password" id="loginLabPass" placeholder="Пароль лаборатории"></div>
-                <div class="field"><label>ФИО:</label><input type="text" id="loginName" placeholder="Иванов Иван Иванович"></div>
-                <div class="field"><label>Пароль:</label><input type="password" id="loginPass"></div>
-                <button class="btn btn-primary" onclick="doLogin()">Войти</button>
-                <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
-                <div id="loginError" class="error"></div>
-            </div>
-            
-            <div id="registerForm" class="card hidden">
-                <h2>📝 Регистрация</h2>
-                <div class="field"><label>Должность:</label><select id="regRole" onchange="toggleRegFields()"><option value="employee">Работник</option><option value="admin">Руководитель</option></select></div>
-                <div id="regAdminField"><div class="field"><label>Пароль лаборатории:</label><input type="text" id="regLabPass" placeholder="Придумайте пароль лаборатории"></div></div>
-                <div id="regEmployeeField" class="hidden"><div class="field"><label>Пароль лаборатории:</label><input type="password" id="regLabPassEmployee" placeholder="Введите пароль лаборатории"></div></div>
-                <div class="field"><label>ФИО:</label><input type="text" id="regName" placeholder="Иванов Иван Иванович"></div>
-                <div class="field"><label>Пароль:</label><input type="password" id="regPass"></div>
-                <div class="field"><label>Аватарка (необязательно):</label><input type="file" id="regAvatar" accept="image/*"></div>
-                <button class="btn btn-success" onclick="doRegister()">Зарегистрироваться</button>
-                <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
-                <div id="regError" class="error"></div>
-                <div id="regSuccess" class="success"></div>
-            </div>
+        <div class="logo">
+            <div class="icon">⚕️</div>
+            <h1>Лабораторная система</h1>
+            <p>Медицинская информационная система</p>
         </div>
         
-        <!-- СТРАНИЦА РУКОВОДИТЕЛЯ -->
-        <div id="pageAdmin" class="page">
-            <div class="header">
-                <h1>👨‍⚕️ Панель руководителя</h1>
-                <div class="button-group">
-                    <button class="btn btn-warning" onclick="showFileExplorer()">📁 Открыть файловый менеджер</button>
-                    <button class="btn btn-info" onclick="exportAllData()">📤 Экспорт всех данных</button>
-                    <button class="btn btn-info" onclick="importData()">📥 Импорт данных</button>
-                    <input type="file" id="importFileAdmin" accept=".json" style="display:none" onchange="doImportAdmin()">
-                    <button class="btn btn-danger" onclick="logout()">🚪 Выйти</button>
-                </div>
-            </div>
-            <div class="user-info" id="adminUserInfo"></div>
-            
-            <div class="card">
-                <h3>➕ Добавить сотрудника</h3>
-                <div class="flex-row">
-                    <div style="flex:1"><input type="text" id="newEmpName" placeholder="ФИО сотрудника" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd;"></div>
-                    <button class="btn btn-success" onclick="addEmployee()">Добавить</button>
-                </div>
-                <div id="addMsg" class="success" style="margin-top:10px;"></div>
-            </div>
-            
-            <div class="card">
-                <h3>📋 Список сотрудников</h3>
-                <div id="employeesList"></div>
-            </div>
-            
-            <div id="fileExplorerPanel" class="card" style="display:none;">
-                <div class="folder-header">
-                    <h3>📁 Файловая система лаборатории: <span id="folderName"></span></h3>
-                    <button class="btn btn-sm" onclick="closeFileExplorer()">✖️ Закрыть</button>
-                </div>
-                <div id="fileExplorerContent" class="files-container"></div>
-            </div>
+        <div id="mainMenu" class="card">
+            <button class="btn btn-primary" onclick="showLogin()">🔐 Вход</button>
+            <button class="btn btn-success" onclick="showRegister()">📝 Регистрация</button>
         </div>
         
-        <!-- СТРАНИЦА РАБОТНИКА -->
-        <div id="pageEmployee" class="page">
-            <div class="header">
-                <h1>👩‍🔬 Панель работника</h1>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="saveToFolder()">📁 Сохранить в лабораторию</button>
-                    <button class="btn btn-info" onclick="exportMyData()">📤 Экспорт моих данных</button>
-                    <button class="btn btn-danger" onclick="logout()">🚪 Выйти</button>
-                </div>
-            </div>
-            <div class="user-info" id="employeeUserInfo"></div>
-            
-            <div class="grid-2">
-                <div class="card">
-                    <h3>👥 Сотрудники лаборатории</h3>
-                    <div id="staffList"></div>
-                </div>
-                
-                <div>
-                    <div class="card">
-                        <h3>🧫 Чашки Петри</h3>
-                        <div class="field"><textarea id="petriContent" rows="3" placeholder="Введите описание чашки Петри... ✍️ Можно писать стилусом"></textarea></div>
-                        <button class="btn btn-success" onclick="savePetri()">💾 Сохранить в базу</button>
-                        <div id="petriList" style="margin-top:15px;"></div>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>📋 Поручения от руководителя</h3>
-                        <div id="tasksList"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="staffFilesModal" class="card hidden">
-                <div class="folder-header">
-                    <h3>📁 Файлы сотрудника: <span id="staffNameModal"></span></h3>
-                    <button class="btn btn-sm" onclick="closeStaffFiles()">✖️ Закрыть</button>
-                </div>
-                <div id="staffFilesContainer" class="files-container"></div>
-            </div>
+        <div id="loginForm" class="card hidden">
+            <h2 style="text-align:center;">🔐 Вход</h2>
+            <div class="field"><label>Пароль лаборатории:</label><input type="password" id="loginLabPass" placeholder="Пароль лаборатории"></div>
+            <div class="field"><label>ФИО:</label><input type="text" id="loginName" placeholder="Иванов Иван"></div>
+            <div class="field"><label>Пароль:</label><input type="password" id="loginPass"></div>
+            <button class="btn btn-primary" onclick="doLogin()">Войти</button>
+            <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
+            <div id="loginError" class="error"></div>
+        </div>
+        
+        <div id="registerForm" class="card hidden">
+            <h2>📝 Регистрация</h2>
+            <div class="field"><label>Должность:</label><select id="regRole" onchange="toggleRegFields()"><option value="employee">Работник</option><option value="admin">Руководитель</option></select></div>
+            <div id="regAdminField"><div class="field"><label>Создать пароль лаборатории:</label><input type="text" id="regLabPass" placeholder="Придумайте пароль"></div></div>
+            <div id="regEmployeeField" class="hidden"><div class="field"><label>Пароль лаборатории:</label><input type="password" id="regLabPassEmployee" placeholder="Введите пароль"></div></div>
+            <div class="field"><label>ФИО:</label><input type="text" id="regName" placeholder="Иванов Иван"></div>
+            <div class="field"><label>Пароль:</label><input type="password" id="regPass"></div>
+            <button class="btn btn-success" onclick="doRegister()">Зарегистрироваться</button>
+            <button class="btn" onclick="showMainMenu()" style="background:#95a5a6; color:white;">Назад</button>
+            <div id="regError" class="error"></div>
+            <div id="regSuccess" class="success"></div>
+        </div>
+        
+        <div id="adminPanel" class="card hidden">
+            <h2>👨‍⚕️ Панель руководителя</h2>
+            <div id="adminName" style="text-align:center; margin-bottom:15px;"></div>
+            <div class="field"><label>ФИО сотрудника:</label><input type="text" id="empName" placeholder="Иванов Иван"></div>
+            <button class="btn btn-success" onclick="addEmployee()">➕ Добавить сотрудника</button>
+            <div id="employeesList" style="margin-top:15px;"></div>
+            <button class="btn" onclick="logout()" style="background:#95a5a6; color:white; margin-top:15px;">🚪 Выйти</button>
+        </div>
+        
+        <div id="employeePanel" class="card hidden">
+            <h2>👩‍🔬 Панель работника</h2>
+            <div id="employeeName" style="text-align:center; margin-bottom:15px;"></div>
+            <div class="field"><textarea id="petriInput" rows="3" placeholder="Введите описание чашки Петри... ✍️ Можно писать стилусом"></textarea></div>
+            <button class="btn btn-success" onclick="savePetri()">💾 Сохранить чашку Петри</button>
+            <div id="petriList" style="margin-top:15px;"></div>
+            <button class="btn" onclick="logout()" style="background:#95a5a6; color:white; margin-top:15px;">🚪 Выйти</button>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ========== ПОДКЛЮЧЕНИЕ К SUPABASE (ОБЛАЧНАЯ БД) ==========
-        const SUPABASE_URL = 'https://qhjlfvzucbvptxmhiaco.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_dgrMPAgvWT_58r5MgMKgVg_fZDDYQWO';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ========== SUPABASE (ТВОИ КЛЮЧИ) ==========
+        const supabaseUrl = 'https://labsystem-8b93c.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhYnN5c3RlbS04YjkzYyIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzQ2MjU5MjUwLCJleHAiOjIwNjE4MzUyNTB9.V0uZvYePdWwtVlWQokHtmBPvQ_dnkgBkZqOAXK-n4QI';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         
         let currentUser = null;
         let currentLab = null;
-        
-        // ========== UI ФУНКЦИИ ==========
-        function showPage(pageName) {
-            document.getElementById('pageLogin').classList.remove('active');
-            document.getElementById('pageAdmin').classList.remove('active');
-            document.getElementById('pageEmployee').classList.remove('active');
-            document.getElementById('page' + pageName).classList.add('active');
-        }
         
         function showMainMenu() {
             document.getElementById('mainMenu').classList.remove('hidden');
@@ -204,13 +97,16 @@
             document.getElementById('employeePanel').classList.add('hidden');
         }
         
-        function showLoginForm() {
+        function showLogin() {
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('loginError').innerHTML = '';
+            document.getElementById('loginLabPass').value = '';
+            document.getElementById('loginName').value = '';
+            document.getElementById('loginPass').value = '';
         }
         
-        function showRegisterForm() {
+        function showRegister() {
             document.getElementById('mainMenu').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
             toggleRegFields();
@@ -229,21 +125,10 @@
             }
         }
         
-        // ========== РЕГИСТРАЦИЯ ЧЕРЕЗ SUPABASE ==========
         async function doRegister() {
             let role = document.getElementById('regRole').value;
             let name = document.getElementById('regName').value.trim();
             let pass = document.getElementById('regPass').value;
-            let avatarFile = document.getElementById('regAvatar').files[0];
-            let avatarBase64 = null;
-            
-            if (avatarFile) {
-                avatarBase64 = await new Promise((resolve) => {
-                    let reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.readAsDataURL(avatarFile);
-                });
-            }
             
             if (!name || !pass) { showRegError('Заполните все поля'); return; }
             if (pass.length < 3) { showRegError('Пароль минимум 3 символа'); return; }
@@ -253,76 +138,42 @@
                 if (!labPass) { showRegError('Создайте пароль лаборатории'); return; }
                 if (labPass.length < 3) { showRegError('Пароль лаборатории минимум 3 символа'); return; }
                 
-                // Проверяем, существует ли лаборатория
-                let { data: existing, error: checkError } = await supabase
-                    .from('users')
-                    .select('lab_password')
-                    .eq('lab_password', labPass)
-                    .eq('role', 'admin');
+                let { data: existing } = await supabase.from('labs').select().eq('lab_password', labPass);
+                if (existing && existing.length > 0) { showRegError('Лаборатория уже создана'); return; }
                 
-                if (existing && existing.length > 0) {
-                    showRegError('Лаборатория уже создана');
-                    return;
-                }
+                await supabase.from('labs').insert([{ lab_password: labPass, created_by: name }]);
                 
-                // Создаём руководителя
-                let { error: insertError } = await supabase.from('users').insert([{
+                let userId = crypto.randomUUID();
+                await supabase.from('users').insert([{
+                    id: userId,
                     fullname: name,
                     password: pass,
                     role: 'admin',
-                    lab_password: labPass,
-                    avatar: avatarBase64
+                    lab_password: labPass
                 }]);
                 
-                if (insertError) {
-                    showRegError('Ошибка: ' + insertError.message);
-                    return;
-                }
-                
-                document.getElementById('regSuccess').innerHTML = '✅ Лаборатория создана! Теперь войдите.';
+                document.getElementById('regSuccess').innerHTML = '✅ Лаборатория создана! Войдите.';
                 setTimeout(showMainMenu, 2000);
             } else {
                 let labPass = document.getElementById('regLabPassEmployee').value;
                 if (!labPass) { showRegError('Введите пароль лаборатории'); return; }
                 
-                // Проверяем, существует ли лаборатория
-                let { data: lab, error: labError } = await supabase
-                    .from('users')
-                    .select('lab_password')
-                    .eq('lab_password', labPass)
-                    .eq('role', 'admin');
+                let { data: lab } = await supabase.from('labs').select().eq('lab_password', labPass);
+                if (!lab || lab.length === 0) { showRegError('Лаборатория не найдена'); return; }
                 
-                if (!lab || lab.length === 0) {
-                    showRegError('Лаборатория не найдена');
-                    return;
-                }
+                let { data: existingUser } = await supabase.from('users').select().eq('fullname', name);
+                if (existingUser && existingUser.length > 0) { showRegError('Пользователь уже существует'); return; }
                 
-                // Проверяем, нет ли такого пользователя
-                let { data: existing, error: userError } = await supabase
-                    .from('users')
-                    .select('fullname')
-                    .eq('fullname', name);
-                
-                if (existing && existing.length > 0) {
-                    showRegError('Пользователь уже существует');
-                    return;
-                }
-                
-                // Создаём работника
-                let { error: insertError } = await supabase.from('users').insert([{
+                let userId = crypto.randomUUID();
+                await supabase.from('users').insert([{
+                    id: userId,
                     fullname: name,
                     password: pass,
                     role: 'employee',
-                    lab_password: labPass,
-                    avatar: avatarBase64
+                    lab_password: labPass
                 }]);
                 
-                if (insertError) {
-                    showRegError('Ошибка: ' + insertError.message);
-                    return;
-                }
-                
-                document.getElementById('regSuccess').innerHTML = '✅ Регистрация успешна! Теперь войдите.';
+                document.getElementById('regSuccess').innerHTML = '✅ Регистрация успешна! Войдите.';
                 setTimeout(showMainMenu, 2000);
             }
         }
@@ -332,7 +183,6 @@
             document.getElementById('regSuccess').innerHTML = '';
         }
         
-        // ========== ВХОД ЧЕРЕЗ SUPABASE ==========
         async function doLogin() {
             let labPass = document.getElementById('loginLabPass').value;
             let name = document.getElementById('loginName').value.trim();
@@ -340,43 +190,37 @@
             
             let { data: user, error } = await supabase
                 .from('users')
-                .select('*')
+                .select()
                 .eq('lab_password', labPass)
                 .eq('fullname', name)
                 .eq('password', pass);
             
-            if (error || !user || user.length === 0) {
-                document.getElementById('loginError').innerHTML = 'Неверный пароль лаборатории, ФИО или пароль';
+            if (!user || user.length === 0) {
+                document.getElementById('loginError').innerHTML = 'Неверные данные';
                 return;
             }
             
             currentUser = user[0];
             currentLab = labPass;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            localStorage.setItem('currentLab', currentLab);
             
             if (currentUser.role === 'admin') {
-                let avatarHtml = currentUser.avatar ? `<img src="${currentUser.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${currentUser.fullname.charAt(0)}</div>`;
-                document.getElementById('adminUserInfo').innerHTML = `${avatarHtml} <span>👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentLab}</span>`;
-                document.getElementById('folderName').innerHTML = currentLab;
-                showPage('Admin');
+                document.getElementById('adminName').innerHTML = `👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentLab}`;
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('mainMenu').classList.add('hidden');
                 loadEmployees();
-                loadAdminFiles();
             } else {
-                let avatarHtml = currentUser.avatar ? `<img src="${currentUser.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${currentUser.fullname.charAt(0)}</div>`;
-                document.getElementById('employeeUserInfo').innerHTML = `${avatarHtml} <span>👩‍🔬 ${currentUser.fullname} | 🔑 ${currentLab}</span>`;
-                showPage('Employee');
-                loadStaffList();
+                document.getElementById('employeeName').innerHTML = `👩‍🔬 ${currentUser.fullname} | 🔑 ${currentLab}`;
+                document.getElementById('employeePanel').classList.remove('hidden');
+                document.getElementById('mainMenu').classList.add('hidden');
                 loadEmployeePetri();
-                loadEmployeeTasks();
             }
         }
         
-        // ========== ПАНЕЛЬ РУКОВОДИТЕЛЯ ==========
         async function loadEmployees() {
-            let { data: users, error } = await supabase
+            let { data: users } = await supabase
                 .from('users')
-                .select('*')
+                .select()
                 .eq('lab_password', currentLab)
                 .eq('role', 'employee');
             
@@ -388,30 +232,22 @@
                 return;
             }
             
-            for (let emp of users) {
+            for (let user of users) {
                 let div = document.createElement('div');
-                div.className = 'employee-card';
+                div.className = 'card';
+                div.style.padding = '15px';
+                div.style.marginBottom = '10px';
                 div.innerHTML = `
-                    <div class="employee-name">
-                        <div class="flex-row" style="gap:10px;">
-                            ${emp.avatar ? `<img src="${emp.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${emp.fullname.charAt(0)}</div>`}
-                            <span>${emp.fullname}</span>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary btn-sm" onclick="showTaskModal('${emp.id}', '${emp.fullname}')">📝 Дать поручение</button>
-                        </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><strong>${user.fullname}</strong></span>
+                        <button class="btn btn-primary" style="padding:8px 16px; width:auto;" onclick='showTaskModal("${user.id}", "${user.fullname}")'>📝 Дать поручение</button>
                     </div>
-                    <div id="petriFor_${emp.id}" style="margin-top:10px; font-size:12px; color:#666;"></div>
+                    <div id="petriFor_${user.id}" style="margin-top:10px; font-size:12px; color:#666;"></div>
                 `;
                 container.appendChild(div);
                 
-                // Загружаем чашки Петри сотрудника
-                let { data: petri } = await supabase
-                    .from('petri')
-                    .select('*')
-                    .eq('user_id', emp.id);
-                
-                let petriDiv = document.getElementById(`petriFor_${emp.id}`);
+                let { data: petri } = await supabase.from('petri').select().eq('employee_id', user.id);
+                let petriDiv = document.getElementById(`petriFor_${user.id}`);
                 if (petri && petri.length > 0) {
                     petriDiv.innerHTML = '<strong>Чашки Петри:</strong><br>';
                     for (let p of petri) {
@@ -422,192 +258,78 @@
         }
         
         async function addEmployee() {
-            let name = document.getElementById('newEmpName').value.trim();
-            if (!name) return;
+            let name = document.getElementById('empName').value.trim();
+            if (!name) { alert('Введите ФИО'); return; }
             
-            let { error } = await supabase.from('users').insert([{
+            let { data: existing } = await supabase.from('users').select().eq('fullname', name).eq('lab_password', currentLab);
+            if (existing && existing.length > 0) { alert('Сотрудник уже добавлен'); return; }
+            
+            let userId = crypto.randomUUID();
+            await supabase.from('users').insert([{
+                id: userId,
                 fullname: name,
                 password: '',
                 role: 'employee',
                 lab_password: currentLab
             }]);
             
-            if (error) {
-                document.getElementById('addMsg').style.color = 'red';
-                document.getElementById('addMsg').innerHTML = 'Ошибка: ' + error.message;
-            } else {
-                document.getElementById('addMsg').style.color = 'green';
-                document.getElementById('addMsg').innerHTML = '✅ Сотрудник добавлен';
-                document.getElementById('newEmpName').value = '';
-                loadEmployees();
-            }
-            setTimeout(() => document.getElementById('addMsg').innerHTML = '', 2000);
+            document.getElementById('empName').value = '';
+            alert('✅ Сотрудник добавлен');
+            loadEmployees();
         }
         
         function showTaskModal(empId, empName) {
             let modal = document.createElement('div');
-            modal.style.position = 'fixed'; modal.style.top = 0; modal.style.left = 0; modal.style.width = '100%'; modal.style.height = '100%';
-            modal.style.background = 'rgba(0,0,0,0.5)'; modal.style.display = 'flex'; modal.style.justifyContent = 'center'; modal.style.alignItems = 'center'; modal.style.zIndex = 2000;
-            modal.innerHTML = `<div style="background:white; border-radius:20px; padding:25px; width:90%; max-width:400px;"><h3>📝 Дать поручение</h3><p>Сотрудник: <strong>${empName}</strong></p><textarea id="taskTitle" rows="3" style="width:100%; padding:12px; margin:15px 0; border:1px solid #ddd; border-radius:10px;"></textarea><div style="display:flex; gap:10px; margin-top:10px;"><button onclick="sendTask('${empId}')" class="btn btn-success">Отправить</button><button onclick="closeModal()" class="btn">Отмена</button></div></div>`;
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0,0,0,0.5)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            modal.innerHTML = `
+                <div style="background:white; border-radius:20px; padding:25px; width:90%; max-width:400px;">
+                    <h3>📝 Дать поручение</h3>
+                    <p>Сотрудник: <strong>${empName}</strong></p>
+                    <textarea id="taskTitle" rows="3" style="width:100%; padding:12px; margin:15px 0; border:1px solid #ddd; border-radius:10px;" placeholder="Введите поручение..."></textarea>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button onclick='sendTask("${empId}")' class="btn btn-success" style="padding:10px 20px;">Отправить</button>
+                        <button onclick="closeModal()" class="btn" style="background:#95a5a6; padding:10px 20px;">Отмена</button>
+                    </div>
+                </div>
+            `;
             document.body.appendChild(modal);
         }
         
-        function closeModal() { let m = document.querySelector('div[style*="position: fixed;"][style*="z-index: 2000"]'); if (m) m.remove(); }
+        function closeModal() {
+            let modal = document.querySelector('div[style*="z-index: 1000"]');
+            if (modal) modal.remove();
+        }
         
         async function sendTask(empId) {
             let title = document.getElementById('taskTitle').value.trim();
             if (!title) { alert('Введите поручение'); return; }
             
-            let { error } = await supabase.from('tasks').insert([{
-                from_user_id: currentUser.id,
-                to_user_id: empId,
+            let taskId = crypto.randomUUID();
+            await supabase.from('tasks').insert([{
+                id: taskId,
+                employee_id: empId,
                 title: title,
-                status: 'pending'
+                from_user: currentUser.fullname,
+                status: 'pending',
+                answer: null,
+                created_at: new Date().toISOString()
             }]);
             
-            if (error) {
-                alert('Ошибка: ' + error.message);
-            } else {
-                closeModal();
-                alert('Поручение отправлено!');
-            }
-        }
-        
-        async function loadAdminFiles() {
-            let { data: files, error } = await supabase
-                .from('lab_files')
-                .select('*')
-                .eq('lab_password', currentLab);
-            
-            let container = document.getElementById('fileExplorerContent');
-            container.innerHTML = '';
-            
-            if (!files || files.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px; color:#95a5a6;"><span class="file-icon">📁</span><br>Нет файлов</div>';
-                return;
-            }
-            
-            for (let file of files) {
-                let div = document.createElement('div');
-                div.className = 'file-card';
-                div.innerHTML = `
-                    <div class="file-info" onclick="viewFileContent('${file.id}')">
-                        <div class="file-name">📄 ${file.file_name}</div>
-                        <div class="file-meta">👤 ${file.employee_name} | 📅 ${new Date(file.created_at).toLocaleString()}</div>
-                    </div>
-                    <div onclick="event.stopPropagation()">
-                        <button class="btn btn-warning btn-sm" onclick="downloadFile('${file.id}', '${file.file_name}', '${file.file_content}')">⬇️ Скачать</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteFile('${file.id}')">🗑️ Удалить</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
-        }
-        
-        function viewFileContent(fileId) {
-            // Функция просмотра
-        }
-        
-        function downloadFile(fileId, fileName, content) {
-            const blob = new Blob([content], {type: 'text/plain'});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(link.href);
-        }
-        
-        async function deleteFile(fileId) {
-            if (confirm('Удалить этот файл?')) {
-                await supabase.from('lab_files').delete().eq('id', fileId);
-                loadAdminFiles();
-                alert('Файл удалён');
-            }
-        }
-        
-        function showFileExplorer() {
-            document.getElementById('fileExplorerPanel').style.display = 'block';
-            loadAdminFiles();
-        }
-        
-        function closeFileExplorer() {
-            document.getElementById('fileExplorerPanel').style.display = 'none';
-        }
-        
-        // ========== ПАНЕЛЬ РАБОТНИКА ==========
-        async function loadStaffList() {
-            let { data: users, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('lab_password', currentLab);
-            
-            let container = document.getElementById('staffList');
-            container.innerHTML = '';
-            
-            if (!users || users.length === 0) {
-                container.innerHTML = '<p>Нет сотрудников</p>';
-                return;
-            }
-            
-            for (let user of users) {
-                let div = document.createElement('div');
-                div.className = 'staff-card';
-                div.onclick = () => showEmployeeFiles(user.id, user.fullname);
-                div.innerHTML = `
-                    <div class="flex-row" style="justify-content:space-between;">
-                        <div class="flex-row" style="gap:10px;">
-                            ${user.avatar ? `<img src="${user.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${user.fullname.charAt(0)}</div>`}
-                            <span><strong>${user.fullname}</strong> (${user.role === 'admin' ? 'Руководитель' : 'Работник'})</span>
-                        </div>
-                        <span>👁️ Нажмите для просмотра файлов</span>
-                    </div>
-                `;
-                container.appendChild(div);
-            }
-        }
-        
-        async function showEmployeeFiles(employeeId, employeeName) {
-            let { data: files, error } = await supabase
-                .from('lab_files')
-                .select('*')
-                .eq('employee_id', employeeId);
-            
-            let container = document.getElementById('staffFilesContainer');
-            let modal = document.getElementById('staffFilesModal');
-            
-            document.getElementById('staffNameModal').innerHTML = employeeName;
-            container.innerHTML = '';
-            
-            if (!files || files.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:40px; color:#95a5a6;">📁 У сотрудника пока нет файлов</div>';
-            } else {
-                for (let file of files) {
-                    let div = document.createElement('div');
-                    div.className = 'file-card';
-                    div.onclick = () => alert(`📄 ${file.file_name}\n\n${file.file_content}`);
-                    div.innerHTML = `
-                        <div class="file-info">
-                            <div class="file-name">📄 ${file.file_name}</div>
-                            <div class="file-meta">📅 ${new Date(file.created_at).toLocaleString()}</div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                }
-            }
-            
-            modal.classList.remove('hidden');
-        }
-        
-        function closeStaffFiles() {
-            document.getElementById('staffFilesModal').classList.add('hidden');
+            closeModal();
+            alert('Поручение отправлено!');
         }
         
         async function loadEmployeePetri() {
-            let { data: petri, error } = await supabase
-                .from('petri')
-                .select('*')
-                .eq('user_id', currentUser.id);
-            
+            let { data: petri } = await supabase.from('petri').select().eq('employee_id', currentUser.id);
             let container = document.getElementById('petriList');
             container.innerHTML = '';
             
@@ -617,142 +339,65 @@
             }
             
             for (let p of petri) {
-                container.innerHTML += `<div class="petri-card">📝 ${p.content}<br><small>${new Date(p.created_at).toLocaleString()}</small></div>`;
+                container.innerHTML += `
+                    <div class="card" style="padding:15px; margin-bottom:10px;">
+                        📄 ${p.content}<br>
+                        <small>${new Date(p.created_at).toLocaleString()}</small>
+                    </div>
+                `;
             }
-        }
-        
-        async function loadEmployeeTasks() {
-            let { data: tasks, error } = await supabase
-                .from('tasks')
-                .select('*')
-                .eq('to_user_id', currentUser.id);
-            
-            let container = document.getElementById('tasksList');
-            container.innerHTML = '';
-            
-            if (!tasks || tasks.length === 0) {
-                container.innerHTML = '<p>Нет поручений</p>';
-                return;
-            }
-            
-            for (let task of tasks) {
-                let answerHtml = task.status === 'completed' ? `<div class="task-answer"><strong>✅ Выполнено</strong></div>` : 
-                    `<textarea id="answer_${task.id}" rows="2" style="width:100%; margin:10px 0; padding:10px;"></textarea>
-                     <button class="btn btn-primary btn-sm" onclick="sendAnswer('${task.id}')">📤 Ответить</button>`;
-                
-                container.innerHTML += `<div class="task-card"><div class="task-title">📌 ${task.title}</div><div>От: отправитель</div><div>📅 ${new Date(task.created_at).toLocaleString()}</div><div><span class="status ${task.status === 'pending' ? 'status-pending' : 'status-completed'}">${task.status === 'pending' ? 'В работе' : 'Выполнено'}</span></div>${answerHtml}</div>`;
-            }
-        }
-        
-        async function sendAnswer(taskId) {
-            let answer = document.getElementById(`answer_${taskId}`).value.trim();
-            if (!answer) { alert('Введите ответ'); return; }
-            
-            await supabase.from('tasks').update({ 
-                status: 'completed',
-                answer: answer,
-                answered_at: new Date().toISOString()
-            }).eq('id', taskId);
-            
-            loadEmployeeTasks();
-            alert('Ответ отправлен');
         }
         
         async function savePetri() {
-            let content = document.getElementById('petriContent').value.trim();
+            let content = document.getElementById('petriInput').value.trim();
             if (!content) { alert('Введите описание'); return; }
             
+            let petriId = crypto.randomUUID();
             await supabase.from('petri').insert([{
-                user_id: currentUser.id,
-                content: content
+                id: petriId,
+                employee_id: currentUser.id,
+                content: content,
+                created_at: new Date().toISOString()
             }]);
             
-            document.getElementById('petriContent').value = '';
+            document.getElementById('petriInput').value = '';
             loadEmployeePetri();
-            alert('Сохранено в базу');
+            alert('✅ Чашка Петри сохранена!');
         }
-        
-        async function saveToFolder() {
-            let content = document.getElementById('petriContent').value.trim();
-            if (!content) { alert('Введите описание'); return; }
-            
-            let fileName = `Чашка_Петри_${currentUser.fullname.replace(/ /g, '_')}_${Date.now()}.txt`;
-            let fileContent = `Лаборатория: ${currentLab}\nСотрудник: ${currentUser.fullname}\nДата: ${new Date().toLocaleString()}\n${'═'.repeat(60)}\nОПИСАНИЕ:\n${content}\n${'═'.repeat(60)}`;
-            
-            await supabase.from('lab_files').insert([{
-                lab_password: currentLab,
-                file_name: fileName,
-                file_content: fileContent,
-                employee_name: currentUser.fullname,
-                employee_id: currentUser.id
-            }]);
-            
-            alert('✅ Файл сохранён в лабораторию!');
-            document.getElementById('petriContent').value = '';
-        }
-        
-        function exportMyData() {
-            alert('Экспорт данных: данные уже в облаке');
-        }
-        
-        function exportAllData() {
-            alert('Экспорт всех данных: данные уже в облаке Supabase');
-        }
-        
-        function importData() {
-            alert('Импорт данных: данные уже синхронизируются автоматически');
-        }
-        
-        function doImportAdmin(e) { }
         
         function logout() {
             localStorage.removeItem('currentUser');
-            localStorage.removeItem('currentLab');
             currentUser = null;
-            showPage('Login');
             showMainMenu();
         }
         
-        // Проверяем сохранённого пользователя
         let savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             currentUser = JSON.parse(savedUser);
-            currentLab = localStorage.getItem('currentLab');
+            currentLab = currentUser.lab_password;
             if (currentUser.role === 'admin') {
-                let avatarHtml = currentUser.avatar ? `<img src="${currentUser.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${currentUser.fullname.charAt(0)}</div>`;
-                document.getElementById('adminUserInfo').innerHTML = `${avatarHtml} <span>👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentLab}</span>`;
-                document.getElementById('folderName').innerHTML = currentLab;
-                showPage('Admin');
+                document.getElementById('adminName').innerHTML = `👨‍⚕️ ${currentUser.fullname} | 🔑 ${currentLab}`;
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('mainMenu').classList.add('hidden');
                 loadEmployees();
-                loadAdminFiles();
             } else {
-                let avatarHtml = currentUser.avatar ? `<img src="${currentUser.avatar}" class="avatar-sm">` : `<div class="avatar-sm">${currentUser.fullname.charAt(0)}</div>`;
-                document.getElementById('employeeUserInfo').innerHTML = `${avatarHtml} <span>👩‍🔬 ${currentUser.fullname} | 🔑 ${currentLab}</span>`;
-                showPage('Employee');
-                loadStaffList();
+                document.getElementById('employeeName').innerHTML = `👩‍🔬 ${currentUser.fullname} | 🔑 ${currentLab}`;
+                document.getElementById('employeePanel').classList.remove('hidden');
+                document.getElementById('mainMenu').classList.add('hidden');
                 loadEmployeePetri();
-                loadEmployeeTasks();
             }
         }
         
         window.showMainMenu = showMainMenu;
-        window.showLoginForm = showLoginForm;
-        window.showRegisterForm = showRegisterForm;
+        window.showLogin = showLogin;
+        window.showRegister = showRegister;
         window.doLogin = doLogin;
         window.doRegister = doRegister;
         window.addEmployee = addEmployee;
         window.showTaskModal = showTaskModal;
         window.sendTask = sendTask;
         window.savePetri = savePetri;
-        window.saveToFolder = saveToFolder;
-        window.sendAnswer = sendAnswer;
         window.logout = logout;
-        window.showFileExplorer = showFileExplorer;
-        window.closeFileExplorer = closeFileExplorer;
-        window.closeStaffFiles = closeStaffFiles;
-        window.exportAllData = exportAllData;
-        window.exportMyData = exportMyData;
-        window.importData = importData;
         window.toggleRegFields = toggleRegFields;
     </script>
 </body>
